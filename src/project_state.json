@@ -1,31 +1,46 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "New project",
-  "architectural_notes": [],
-  "known_issues": [
-    "Bottom navigation bar far-right profile icon is clipped/cut off on all screen sizes; user requests shifting all bottom nav icons slightly left to resolve."
+  "summary": "Website-to-APK style app/website with a preloader screen shown on each app open (initial launch only).",
+  "architectural_notes": [
+    "Preloader should display on each app open/initial launch only, and must not trigger on internal page/route changes; keep existing animation/timing unchanged."
   ],
-  "isFixRequest": true,
+  "known_issues": [],
+  "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-fix-the-bottom-navigation-bar-layout-so-the-far-right-profile-tab-icon-label-is-no-longer-clipped-cut-off-on-any-screen-size-including-devices-with-right-safe-area-insets",
-      "title": "Fix the bottom navigation bar layout so the far-right Profile tab (icon + label) is no longer clipped/cut off on any screen size, including devices with right safe-area insets.",
+      "id": "feature-update-the-app-level-preloader-gating-so-the-existing-animated-preloader-displays-on-every-fresh-app-open-load-but-never-on-internal-route-page-changes-within-the-spa",
+      "title": "Update the app-level preloader gating so the existing animated preloader displays on every fresh app open/load, but never on internal route/page changes within the SPA.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-shift-all-bottom-navigation-bar-tabs-slightly-to-the-left-as-a-group-while-keeping-spacing-visually-balanced-and-consistent-across-screen-sizes",
-      "title": "Shift all bottom navigation bar tabs slightly to the left (as a group) while keeping spacing visually balanced and consistent across screen sizes.",
+      "id": "feature-preserve-the-current-preloader-animation-timing-and-visuals-exactly-as-implemented-in-firstlaunchpreloader-including-the-z-i-z-o-reveal-sequence-and-fade-out-behavior",
+      "title": "Preserve the current preloader animation timing and visuals exactly as implemented in FirstLaunchPreloader, including the Z → I → Z → O reveal sequence and fade-out behavior.",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-remove-or-replace-the-current-persistent-first-launch-only-localstorage-behavior-key-app-first-launch-complete-so-it-no-longer-prevents-the-preloader-from-showing-on-subsequent-app-opens",
+      "title": "Remove or replace the current persistent 'first launch only' localStorage behavior (key: 'app-first-launch-complete') so it no longer prevents the preloader from showing on subsequent app opens.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
     }
   ],
-  "new_feature_requests": [],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Show the existing preloader every time the user opens the app (initial launch only; not on internal page/route changes) and keep current timing/animation unchanged",
+      "reqIds": [],
+      "status": "in_progress"
+    }
+  ],
   "projectName": "ZIZO",
   "clarification_mode": "instant",
   "clarification_rounds": 0

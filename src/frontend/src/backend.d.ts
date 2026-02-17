@@ -37,6 +37,11 @@ export interface FollowerCounts {
 export interface UserProfile {
     name: string;
 }
+export enum PostType {
+    video = "video",
+    text = "text",
+    image = "image"
+}
 export enum UserRole {
     admin = "admin",
     user = "user",
@@ -46,10 +51,14 @@ export interface backendInterface {
     addComment(videoId: string, content: string): Promise<void>;
     addReaction(videoId: string, reactionType: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    doubleTapToLike(postId: string): Promise<void>;
+    getAllPosts(): Promise<Array<[string, PostType]>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getComments(videoId: string): Promise<Array<Comment>>;
     getFollowerCounts(user: Principal): Promise<FollowerCounts>;
+    getLikes(postId: string): Promise<bigint>;
+    getPostType(postId: string): Promise<PostType | null>;
     getReactionCounts(videoId: string): Promise<Array<ReactionCount>>;
     getTrending(): Promise<Array<Video>>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
@@ -58,6 +67,7 @@ export interface backendInterface {
     isCallerAdmin(): Promise<boolean>;
     isFollowing(follower: Principal, followee: Principal): Promise<boolean>;
     likeVideo(videoId: string): Promise<void>;
+    registerPost(postId: string, postType: PostType): Promise<void>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     toggleFollow(target: Principal): Promise<void>;
     uploadVideo(title: string, file: ExternalBlob): Promise<void>;

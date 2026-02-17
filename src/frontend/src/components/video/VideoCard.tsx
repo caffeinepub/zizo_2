@@ -1,10 +1,12 @@
 import { useRef, useEffect, useState } from 'react';
 import type { Video } from '../../backend';
 import InteractionBar from './InteractionBar';
-import { useDoubleTap } from '../../hooks/useDoubleTap';
+import { useTapGestures } from '../../hooks/useTapGestures';
 import { useLikeVideo } from '../../hooks/useQueries';
+import { useInternetIdentity } from '../../hooks/useInternetIdentity';
 import { triggerHaptic } from '../../utils/haptics';
 import { Heart } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface VideoCardProps {
   video: Video;
@@ -15,28 +17,54 @@ interface VideoCardProps {
 export default function VideoCard({ video, isActive, compact = false }: VideoCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const likeMutation = useLikeVideo();
+  const { identity } = useInternetIdentity();
   const [showHeart, setShowHeart] = useState(false);
-  
-  const doubleTapHandlers = useDoubleTap(() => {
+  const [userPaused, setUserPaused] = useState(false);
+
+  const handleSingleTap = () => {
+    const videoElement = videoRef.current;
+    if (!videoElement) return;
+
+    if (videoElement.paused) {
+      videoElement.play().catch(() => {});
+      setUserPaused(false);
+    } else {
+      videoElement.pause();
+      setUserPaused(true);
+    }
+  };
+
+  const handleDoubleTap = () => {
+    if (!identity) {
+      toast.error('Please log in to like videos');
+      return;
+    }
+
     triggerHaptic('medium');
     likeMutation.mutate(video.id);
     setShowHeart(true);
     setTimeout(() => setShowHeart(false), 1000);
+  };
+
+  const tapHandlers = useTapGestures({
+    onSingleTap: handleSingleTap,
+    onDoubleTap: handleDoubleTap,
   });
 
   useEffect(() => {
     const videoElement = videoRef.current;
     if (!videoElement) return;
 
-    if (isActive) {
+    if (isActive && !userPaused) {
       videoElement.play().catch(() => {});
-    } else {
+    } else if (!isActive) {
       videoElement.pause();
+      setUserPaused(false);
     }
-  }, [isActive]);
+  }, [isActive, userPaused]);
 
   return (
-    <div className="relative w-full h-full bg-black" {...doubleTapHandlers}>
+    <div className="relative w-full h-full bg-black" {...tapHandlers}>
       <video
         ref={videoRef}
         src={video.url.getDirectURL()}

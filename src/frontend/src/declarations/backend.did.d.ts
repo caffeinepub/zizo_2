@@ -17,6 +17,9 @@ export interface Comment {
 }
 export type ExternalBlob = Uint8Array;
 export interface FollowerCounts { 'followers' : bigint, 'following' : bigint }
+export type PostType = { 'video' : null } |
+  { 'text' : null } |
+  { 'image' : null };
 export interface ReactionCount { 'count' : bigint, 'reactionType' : string }
 export interface UserProfile { 'name' : string }
 export type UserRole = { 'admin' : null } |
@@ -60,10 +63,14 @@ export interface _SERVICE {
   'addComment' : ActorMethod<[string, string], undefined>,
   'addReaction' : ActorMethod<[string, string], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'doubleTapToLike' : ActorMethod<[string], undefined>,
+  'getAllPosts' : ActorMethod<[], Array<[string, PostType]>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getComments' : ActorMethod<[string], Array<Comment>>,
   'getFollowerCounts' : ActorMethod<[Principal], FollowerCounts>,
+  'getLikes' : ActorMethod<[string], bigint>,
+  'getPostType' : ActorMethod<[string], [] | [PostType]>,
   'getReactionCounts' : ActorMethod<[string], Array<ReactionCount>>,
   'getTrending' : ActorMethod<[], Array<Video>>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
@@ -72,6 +79,7 @@ export interface _SERVICE {
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'isFollowing' : ActorMethod<[Principal, Principal], boolean>,
   'likeVideo' : ActorMethod<[string], undefined>,
+  'registerPost' : ActorMethod<[string, PostType], undefined>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'toggleFollow' : ActorMethod<[Principal], undefined>,
   'uploadVideo' : ActorMethod<[string, ExternalBlob], undefined>,

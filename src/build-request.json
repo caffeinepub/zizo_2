@@ -1,59 +1,86 @@
 {
   "kind": "build_request",
-  "title": "Fix bottom navigation icons clipping and shift icons left",
+  "title": "Show launch preloader on every app open (not on route changes)",
   "projectName": "ZIZO",
-  "priority": "high",
+  "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Fix the bottom navigation bar layout so the far-right Profile tab (icon + label) is no longer clipped/cut off on any screen size, including devices with right safe-area insets.",
+      "text": "Update the app-level preloader gating so the existing animated preloader displays on every fresh app open/load, but never on internal route/page changes within the SPA.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-user-implement-now",
+          "msg-user-preloader-clarification"
         ],
         "quotes": [
-          "the bottom navigation bar icon on the far right (the profile icon) is being cut off,",
-          "It is cut off on all screen size"
+          "Implement now",
+          "It should appear anytime the user opens it \nNo it shouldn't show on every page load it should only show on the initial lunch \nYes the timing and animation should say exactly as currently bill"
         ]
       },
       "acceptanceCriteria": [
-        "On Home/Trending/Create/Notifications/Profile routes, the Profile tab icon and label are fully visible (no clipping) at common viewport widths (mobile, tablet, desktop).",
-        "The bottom bar still respects safe-area insets (left/right/bottom) and remains fixed to the bottom without overlapping OS navigation areas.",
-        "No horizontal scrolling is introduced by the bottom tab bar."
+        "When the app is opened in a new browser tab/window (or after fully closing and reopening the app), the preloader is shown before the main UI renders.",
+        "Navigating between routes (e.g., Home → Trending → Profile) does not re-trigger the preloader.",
+        "Refreshing/reloading the page triggers the preloader again (because this is a new app open/load)."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Shift all bottom navigation bar tabs slightly to the left (as a group) while keeping spacing visually balanced and consistent across screen sizes.",
+      "text": "Preserve the current preloader animation timing and visuals exactly as implemented in FirstLaunchPreloader, including the Z → I → Z → O reveal sequence and fade-out behavior.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-user-preloader-clarification"
         ],
         "quotes": [
-          "Let all the bottom  icon be slightly shifted to the left side",
-          "I want the profile icons slightly shifted to the left side"
+          "Yes the timing and animation should say exactly as currently bill"
         ]
       },
       "acceptanceCriteria": [
-        "All five bottom tabs appear horizontally shifted left by a small, consistent amount (e.g., via asymmetric container padding/offset) without any single tab looking misaligned relative to the others.",
-        "After the shift, the Profile tab remains fully visible and is not closer than a reasonable touch-safe margin from the right edge/safe-area inset.",
-        "Tab hit areas remain comfortably tappable (no reduction in button size below current behavior)."
+        "No changes to the step timings (1s, 2s, 3s, 4s, hold until 5.5s, then 0.5s fade-out callback) are introduced.",
+        "The preloader continues to use /assets/generated/zizo-preloader-logo.dim_512x512.png and renders with the existing CSS-driven clip-path reveal."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Remove or replace the current persistent 'first launch only' localStorage behavior (key: 'app-first-launch-complete') so it no longer prevents the preloader from showing on subsequent app opens.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-preloader-clarification"
+        ],
+        "quotes": [
+          "It should appear anytime the user opens it"
+        ]
+      },
+      "acceptanceCriteria": [
+        "After the change, previously-set localStorage value 'app-first-launch-complete' does not stop the preloader from appearing on a new app open/load.",
+        "The preloader completion still transitions cleanly to the main app UI without a flash of unstyled content."
       ]
     }
   ],
   "constraints": [
-    "Do not modify any files under frontend/src/components/ui (read-only).",
-    "Do not modify immutable hook/bootstrap files: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx.",
-    "Backend behavior and state schema must remain unchanged for this fix."
+    "Do not show the preloader on internal SPA route changes; it must only appear on a fresh app open/load.",
+    "Do not modify the preloader timing/animation/visuals.",
+    "Do not edit any files under frontend/src/components/ui or other frontend immutable paths listed in SYSTEM_CONTEXT."
   ],
   "nonGoals": [
-    "Do not redesign the overall app theme or navigation IA.",
-    "Do not add new tabs or change tab routes/labels beyond what is necessary to fix clipping and apply the left shift."
+    "Building or integrating a website-to-APK conversion service.",
+    "Adding ads, analytics, push notifications, or real-time features.",
+    "Redesigning the overall app UI beyond the preloader gating behavior change."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
   }
 }

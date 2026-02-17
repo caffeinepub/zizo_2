@@ -1,11 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Fix the bottom navigation bar so the rightmost Profile tab is never clipped and shift the entire tab group slightly left while preserving balanced spacing and safe-area behavior.
+**Goal:** Show the existing launch preloader on every fresh app open/load, while ensuring it never reappears during internal SPA route navigation.
 
 **Planned changes:**
-- Update bottom navigation bar container/layout to ensure the Profile tab (icon + label) is fully visible across screen sizes, including devices with right safe-area insets.
-- Apply a small, consistent left shift to the bottom tab group (as a whole) using container-level padding/offset while keeping spacing visually balanced.
-- Ensure the bottom bar remains fixed to the bottom, respects left/right/bottom safe-area insets, and does not introduce horizontal scrolling; preserve current tap target sizes.
+- Update the app-level preloader gating so the preloader triggers on initial app load/open (including full page refresh), but not on client-side route changes.
+- Remove/replace the current persistent “first launch only” localStorage behavior (key: `app-first-launch-complete`) so it no longer blocks the preloader on subsequent app opens.
+- Preserve the current `FirstLaunchPreloader` animation visuals and timings exactly as implemented (Z → I → Z → O reveal and fade-out), including use of `/assets/generated/zizo-preloader-logo.dim_512x512.png`.
 
-**User-visible outcome:** The bottom navigation bar shows all five tabs fully (including Profile) on all devices without clipping, and the tabs appear slightly shifted left with consistent spacing and comfortable tap areas.
+**User-visible outcome:** Each time the user opens or reloads the app, they see the same preloader animation before the main UI; navigating between pages within the app does not trigger the preloader again.

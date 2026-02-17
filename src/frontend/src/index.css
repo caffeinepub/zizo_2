@@ -43,6 +43,10 @@
         --tab-bar-height: 4rem;
         --tab-bar-total-space: calc(var(--tab-bar-height) + var(--tab-bar-inset) + env(safe-area-inset-bottom, 0px));
         --tab-bar-horizontal-shift: 1rem;
+
+        /* Preloader colors */
+        --preloader-bg: 0.08 0 0;
+        --preloader-accent: 0.696 0.17 162.48;
     }
 
     .dark {
@@ -96,4 +100,71 @@
 
 .safe-bottom {
     padding-bottom: calc(var(--tab-bar-total-space) + 1rem);
+}
+
+/* Preloader styles */
+.preloader-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: oklch(var(--preloader-bg));
+    transition: opacity 0.5s ease-out;
+}
+
+.preloader-fade-out {
+    opacity: 0;
+}
+
+.preloader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.preloader-logo-container {
+    position: relative;
+    width: 160px;
+    height: 160px;
+}
+
+.preloader-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 40px oklch(var(--preloader-accent) / 0.3));
+    transition: clip-path 0.3s ease-out;
+}
+
+/* Letter reveal animation using clip-path */
+/* Step 0: Show first Z (left ~25%) */
+.preloader-logo-step-0 {
+    clip-path: inset(0 75% 0 0);
+}
+
+/* Step 1: Show Z + I (left ~50%) */
+.preloader-logo-step-1 {
+    clip-path: inset(0 50% 0 0);
+}
+
+/* Step 2: Show Z + I + Z (left ~75%) */
+.preloader-logo-step-2 {
+    clip-path: inset(0 25% 0 0);
+}
+
+/* Step 3: Show Z + I + Z + O (full logo) */
+.preloader-logo-step-3,
+.preloader-logo-step-4 {
+    clip-path: inset(0 0 0 0);
+}
+
+@media (min-width: 768px) {
+    .preloader-logo-container {
+        width: 200px;
+        height: 200px;
+    }
 }

@@ -2,11 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-fix-the-bottom-navigation-bar-layout-so-the-far-right-profile-tab-icon-label-is-no-longer-clipped-cut-off-on-any-screen-size-including-devices-with-right-safe-area-insets",
-      "featureTitle": "Fix the bottom navigation bar layout so the far-right Profile tab (icon + label) is no longer clipped/cut off on any screen size, including devices with right safe-area insets.",
+      "featureId": "feature-update-the-app-level-preloader-gating-so-the-existing-animated-preloader-displays-on-every-fresh-app-open-load-but-never-on-internal-route-page-changes-within-the-spa",
+      "featureTitle": "Update the app-level preloader gating so the existing animated preloader displays on every fresh app open/load, but never on internal route/page changes within the SPA.",
       "files": [
-        "frontend/src/components/navigation/BottomTabs.tsx",
-        "frontend/src/index.css"
+        "frontend/src/App.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -24,11 +23,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-shift-all-bottom-navigation-bar-tabs-slightly-to-the-left-as-a-group-while-keeping-spacing-visually-balanced-and-consistent-across-screen-sizes",
-      "featureTitle": "Shift all bottom navigation bar tabs slightly to the left (as a group) while keeping spacing visually balanced and consistent across screen sizes.",
+      "featureId": "feature-preserve-the-current-preloader-animation-timing-and-visuals-exactly-as-implemented-in-firstlaunchpreloader-including-the-z-i-z-o-reveal-sequence-and-fade-out-behavior",
+      "featureTitle": "Preserve the current preloader animation timing and visuals exactly as implemented in FirstLaunchPreloader, including the Z → I → Z → O reveal sequence and fade-out behavior.",
       "files": [
-        "frontend/src/components/navigation/BottomTabs.tsx",
-        "frontend/src/index.css"
+        "frontend/src/App.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -42,6 +40,27 @@
       ],
       "testIds": [
         "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-remove-or-replace-the-current-persistent-first-launch-only-localstorage-behavior-key-app-first-launch-complete-so-it-no-longer-prevents-the-preloader-from-showing-on-subsequent-app-opens",
+      "featureTitle": "Remove or replace the current persistent 'first launch only' localStorage behavior (key: 'app-first-launch-complete') so it no longer prevents the preloader from showing on subsequent app opens.",
+      "files": [
+        "frontend/src/App.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "camera@1.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
       ],
       "confidence": "high"
     }

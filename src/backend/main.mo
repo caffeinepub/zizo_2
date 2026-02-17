@@ -11,8 +11,6 @@ import Storage "blob-storage/Storage";
 import AccessControl "authorization/access-control";
 import MixinAuthorization "authorization/MixinAuthorization";
 
-
-
 actor {
   public type Video = {
     id : Text;
@@ -65,6 +63,72 @@ actor {
   let accessControlState = AccessControl.initState();
   include MixinStorage();
   include MixinAuthorization(accessControlState);
+
+  // Post Types
+  type Post = {
+    likes : Nat;
+    // Other post properties can be added here
+  };
+
+  type PostType = {
+    #video;
+    #text;
+    #image;
+  };
+
+  // Post management
+  let postTypes = Map.empty<Text, PostType>();
+  let posts = Map.empty<Text, Post>();
+
+  public shared ({ caller }) func registerPost(postId : Text, postType : PostType) : async () {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized");
+    };
+
+    let newPost : Post = {
+      likes = 0;
+    };
+
+    postTypes.add(postId, postType);
+    posts.add(postId, newPost);
+  };
+
+  public shared ({ caller }) func doubleTapToLike(postId : Text) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can like posts");
+    };
+
+    switch (postTypes.get(postId)) {
+      case (null) { Runtime.trap("Post type not found") };
+      case (?_) {
+        switch (posts.get(postId)) {
+          case (null) { Runtime.trap("Post not found") };
+          case (?post) {
+            let updatedPost = {
+              post with
+              likes = post.likes + 1;
+            };
+            posts.add(postId, updatedPost);
+          };
+        };
+      };
+    };
+  };
+
+  public query ({ caller }) func getLikes(postId : Text) : async Nat {
+    switch (posts.get(postId)) {
+      case (null) { Runtime.trap("Post not found") };
+      case (?post) { post.likes };
+    };
+  };
+
+  public query ({ caller }) func getPostType(postId : Text) : async ?PostType {
+    postTypes.get(postId);
+  };
+
+  public query ({ caller }) func getAllPosts() : async [(Text, PostType)] {
+    postTypes.entries().toArray();
+  };
 
   // User Profile Management
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {

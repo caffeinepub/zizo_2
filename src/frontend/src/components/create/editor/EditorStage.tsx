@@ -1,6 +1,7 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import type { CreationMode } from '../CreationFlow';
 import type { EditorState } from '../../../utils/editor/types';
+import { useTapGestures } from '../../../hooks/useTapGestures';
 
 interface EditorStageProps {
   mediaUrl: string;
@@ -12,6 +13,26 @@ interface EditorStageProps {
 export default function EditorStage({ mediaUrl, mode, editorState, duration }: EditorStageProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isPaused, setIsPaused] = useState(false);
+
+  const handleSingleTap = () => {
+    if (mode !== 'video') return;
+    
+    const videoElement = videoRef.current;
+    if (!videoElement) return;
+
+    if (videoElement.paused) {
+      videoElement.play().catch(() => {});
+      setIsPaused(false);
+    } else {
+      videoElement.pause();
+      setIsPaused(true);
+    }
+  };
+
+  const tapHandlers = useTapGestures({
+    onSingleTap: handleSingleTap,
+  });
 
   useEffect(() => {
     if (videoRef.current && mode === 'video') {
@@ -28,7 +49,7 @@ export default function EditorStage({ mediaUrl, mode, editorState, duration }: E
         backgroundPosition: 'center',
       }}
     >
-      <div className="relative aspect-[9/16] h-full max-h-full bg-black">
+      <div className="relative aspect-[9/16] h-full max-h-full bg-black" {...(mode === 'video' ? tapHandlers : {})}>
         {mode === 'video' ? (
           <video
             ref={videoRef}

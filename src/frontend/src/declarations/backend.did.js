@@ -24,6 +24,11 @@ export const UserRole = IDL.Variant({
   'user' : IDL.Null,
   'guest' : IDL.Null,
 });
+export const PostType = IDL.Variant({
+  'video' : IDL.Null,
+  'text' : IDL.Null,
+  'image' : IDL.Null,
+});
 export const UserProfile = IDL.Record({ 'name' : IDL.Text });
 export const Comment = IDL.Record({
   'content' : IDL.Text,
@@ -78,10 +83,18 @@ export const idlService = IDL.Service({
   'addComment' : IDL.Func([IDL.Text, IDL.Text], [], []),
   'addReaction' : IDL.Func([IDL.Text, IDL.Text], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'doubleTapToLike' : IDL.Func([IDL.Text], [], []),
+  'getAllPosts' : IDL.Func(
+      [],
+      [IDL.Vec(IDL.Tuple(IDL.Text, PostType))],
+      ['query'],
+    ),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getComments' : IDL.Func([IDL.Text], [IDL.Vec(Comment)], ['query']),
   'getFollowerCounts' : IDL.Func([IDL.Principal], [FollowerCounts], ['query']),
+  'getLikes' : IDL.Func([IDL.Text], [IDL.Nat], ['query']),
+  'getPostType' : IDL.Func([IDL.Text], [IDL.Opt(PostType)], ['query']),
   'getReactionCounts' : IDL.Func(
       [IDL.Text],
       [IDL.Vec(ReactionCount)],
@@ -102,6 +115,7 @@ export const idlService = IDL.Service({
       ['query'],
     ),
   'likeVideo' : IDL.Func([IDL.Text], [], []),
+  'registerPost' : IDL.Func([IDL.Text, PostType], [], []),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   'toggleFollow' : IDL.Func([IDL.Principal], [], []),
   'uploadVideo' : IDL.Func([IDL.Text, ExternalBlob], [], []),
@@ -125,6 +139,11 @@ export const idlFactory = ({ IDL }) => {
     'admin' : IDL.Null,
     'user' : IDL.Null,
     'guest' : IDL.Null,
+  });
+  const PostType = IDL.Variant({
+    'video' : IDL.Null,
+    'text' : IDL.Null,
+    'image' : IDL.Null,
   });
   const UserProfile = IDL.Record({ 'name' : IDL.Text });
   const Comment = IDL.Record({
@@ -180,6 +199,12 @@ export const idlFactory = ({ IDL }) => {
     'addComment' : IDL.Func([IDL.Text, IDL.Text], [], []),
     'addReaction' : IDL.Func([IDL.Text, IDL.Text], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'doubleTapToLike' : IDL.Func([IDL.Text], [], []),
+    'getAllPosts' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Tuple(IDL.Text, PostType))],
+        ['query'],
+      ),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getComments' : IDL.Func([IDL.Text], [IDL.Vec(Comment)], ['query']),
@@ -188,6 +213,8 @@ export const idlFactory = ({ IDL }) => {
         [FollowerCounts],
         ['query'],
       ),
+    'getLikes' : IDL.Func([IDL.Text], [IDL.Nat], ['query']),
+    'getPostType' : IDL.Func([IDL.Text], [IDL.Opt(PostType)], ['query']),
     'getReactionCounts' : IDL.Func(
         [IDL.Text],
         [IDL.Vec(ReactionCount)],
@@ -208,6 +235,7 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'likeVideo' : IDL.Func([IDL.Text], [], []),
+    'registerPost' : IDL.Func([IDL.Text, PostType], [], []),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
     'toggleFollow' : IDL.Func([IDL.Principal], [], []),
     'uploadVideo' : IDL.Func([IDL.Text, ExternalBlob], [], []),

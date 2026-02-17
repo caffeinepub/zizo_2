@@ -1,47 +1,51 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Bottom navigation: prevent clipping and apply slight left shift",
+  "title": "Show preloader on every fresh app load (not on SPA route changes)",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Prevent the far-right Profile tab (icon + label) from being clipped on all screen sizes while respecting safe-area insets and avoiding horizontal scroll.",
+      "summary": "Show the existing preloader on each fresh app open/load while ensuring SPA route navigation never re-triggers it.",
       "acceptanceCriteria": [
-        "On Home/Trending/Create/Notifications/Profile routes, the Profile tab icon and label are fully visible (no clipping) at common viewport widths (mobile, tablet, desktop).",
-        "The bottom bar still respects safe-area insets (left/right/bottom) and remains fixed to the bottom without overlapping OS navigation areas.",
-        "No horizontal scrolling is introduced by the bottom tab bar."
+        "When the app is opened in a new browser tab/window (or after fully closing and reopening the app), the preloader is shown before the main UI renders.",
+        "Navigating between routes (e.g., Home → Trending → Profile) does not re-trigger the preloader.",
+        "Refreshing/reloading the page triggers the preloader again (because this is a new app open/load)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/navigation/BottomTabs.tsx",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Adjust bottom tab bar layout to avoid overflow on narrow widths by reducing per-tab horizontal padding, using equal-width/flexing tab buttons (e.g., flex-1/min-w-0), and ensuring the nav/container does not cause horizontal overflow (e.g., overflow-x hidden/clip on the bar). Keep existing safe-area handling (left/right/bottom) and fixed positioning."
-        },
-        {
-          "path": "frontend/src/index.css",
-          "operation": "modify",
-          "description": "Extend existing bottom tab bar CSS variables to support robust spacing on small screens (e.g., introduce a dedicated variable for additional right-side breathing room / shift) without changing overall theme. Ensure changes are compatible with safe-area inset calculations already used by the bottom bar."
+          "description": "Update app-level gating so FirstLaunchPreloader is shown on initial React app mount every time the app loads (including refresh), and is never tied to route transitions (keep gating only at App root, not per-page)."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Shift all bottom navigation tabs slightly to the left as a group while keeping spacing balanced and touch targets unchanged.",
+      "summary": "Keep the preloader animation timing and visuals exactly as currently implemented in FirstLaunchPreloader.",
       "acceptanceCriteria": [
-        "All five bottom tabs appear horizontally shifted left by a small, consistent amount (e.g., via asymmetric container padding/offset) without any single tab looking misaligned relative to the others.",
-        "After the shift, the Profile tab remains fully visible and is not closer than a reasonable touch-safe margin from the right edge/safe-area inset.",
-        "Tab hit areas remain comfortably tappable (no reduction in button size below current behavior)."
+        "No changes to the step timings (1s, 2s, 3s, 4s, hold until 5.5s, then 0.5s fade-out callback) are introduced.",
+        "The preloader continues to use /assets/generated/zizo-preloader-logo.dim_512x512.png and renders with the existing CSS-driven clip-path reveal."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/navigation/BottomTabs.tsx",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Apply a small, consistent left shift to the entire tab group using asymmetric container padding (e.g., slightly larger right padding than left) or a subtle translate on the inner container, while preserving safe-area inset padding and maintaining current/comfortable hit-area sizes."
-        },
+          "description": "Ensure App continues to render the existing FirstLaunchPreloader component as-is (no prop/behavior changes that would affect its timing/visuals), only changing when it is shown (on app mount) and when the main UI becomes visible (after onComplete)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Remove the persistent first-launch localStorage gate so it no longer prevents the preloader from appearing on subsequent app opens.",
+      "acceptanceCriteria": [
+        "After the change, previously-set localStorage value 'app-first-launch-complete' does not stop the preloader from appearing on a new app open/load.",
+        "The preloader completion still transitions cleanly to the main app UI without a flash of unstyled content."
+      ],
+      "file_operations": [
         {
-          "path": "frontend/src/index.css",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Define/tune a single CSS variable controlling the bottom-tab group horizontal shift amount so it remains consistent across screen sizes and can be adjusted without changing component structure."
+          "description": "Remove/replace the current localStorage-based FIRST_LAUNCH_KEY check and write (key: 'app-first-launch-complete') so the preloader is not persisted as 'complete' across app opens; keep a purely in-memory completion flag so the preloader runs once per full page load and then cleanly hands off to the main UI."
         }
       ]
     }
