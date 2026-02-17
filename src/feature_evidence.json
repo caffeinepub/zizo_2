@@ -1,0 +1,49 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-fix-the-bottom-navigation-bar-layout-so-the-far-right-profile-tab-icon-label-is-no-longer-clipped-cut-off-on-any-screen-size-including-devices-with-right-safe-area-insets",
+      "featureTitle": "Fix the bottom navigation bar layout so the far-right Profile tab (icon + label) is no longer clipped/cut off on any screen size, including devices with right safe-area insets.",
+      "files": [
+        "frontend/src/components/navigation/BottomTabs.tsx",
+        "frontend/src/index.css"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "camera@1.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-shift-all-bottom-navigation-bar-tabs-slightly-to-the-left-as-a-group-while-keeping-spacing-visually-balanced-and-consistent-across-screen-sizes",
+      "featureTitle": "Shift all bottom navigation bar tabs slightly to the left (as a group) while keeping spacing visually balanced and consistent across screen sizes.",
+      "files": [
+        "frontend/src/components/navigation/BottomTabs.tsx",
+        "frontend/src/index.css"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "blob-storage@4.0.0",
+        "camera@1.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

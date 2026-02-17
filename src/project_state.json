@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "New project",
+  "architectural_notes": [],
+  "known_issues": [
+    "Bottom navigation bar far-right profile icon is clipped/cut off on all screen sizes; user requests shifting all bottom nav icons slightly left to resolve."
+  ],
+  "isFixRequest": true,
+  "existing_features": [
+    {
+      "id": "feature-fix-the-bottom-navigation-bar-layout-so-the-far-right-profile-tab-icon-label-is-no-longer-clipped-cut-off-on-any-screen-size-including-devices-with-right-safe-area-insets",
+      "title": "Fix the bottom navigation bar layout so the far-right Profile tab (icon + label) is no longer clipped/cut off on any screen size, including devices with right safe-area insets.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-shift-all-bottom-navigation-bar-tabs-slightly-to-the-left-as-a-group-while-keeping-spacing-visually-balanced-and-consistent-across-screen-sizes",
+      "title": "Shift all bottom navigation bar tabs slightly to the left (as a group) while keeping spacing visually balanced and consistent across screen sizes.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [],
+  "projectName": "ZIZO",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

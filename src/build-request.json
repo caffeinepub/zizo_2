@@ -1,0 +1,59 @@
+{
+  "kind": "build_request",
+  "title": "Fix bottom navigation icons clipping and shift icons left",
+  "projectName": "ZIZO",
+  "priority": "high",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Fix the bottom navigation bar layout so the far-right Profile tab (icon + label) is no longer clipped/cut off on any screen size, including devices with right safe-area insets.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "the bottom navigation bar icon on the far right (the profile icon) is being cut off,",
+          "It is cut off on all screen size"
+        ]
+      },
+      "acceptanceCriteria": [
+        "On Home/Trending/Create/Notifications/Profile routes, the Profile tab icon and label are fully visible (no clipping) at common viewport widths (mobile, tablet, desktop).",
+        "The bottom bar still respects safe-area insets (left/right/bottom) and remains fixed to the bottom without overlapping OS navigation areas.",
+        "No horizontal scrolling is introduced by the bottom tab bar."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Shift all bottom navigation bar tabs slightly to the left (as a group) while keeping spacing visually balanced and consistent across screen sizes.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Let all the bottom  icon be slightly shifted to the left side",
+          "I want the profile icons slightly shifted to the left side"
+        ]
+      },
+      "acceptanceCriteria": [
+        "All five bottom tabs appear horizontally shifted left by a small, consistent amount (e.g., via asymmetric container padding/offset) without any single tab looking misaligned relative to the others.",
+        "After the shift, the Profile tab remains fully visible and is not closer than a reasonable touch-safe margin from the right edge/safe-area inset.",
+        "Tab hit areas remain comfortably tappable (no reduction in button size below current behavior)."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not modify any files under frontend/src/components/ui (read-only).",
+    "Do not modify immutable hook/bootstrap files: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx.",
+    "Backend behavior and state schema must remain unchanged for this fix."
+  ],
+  "nonGoals": [
+    "Do not redesign the overall app theme or navigation IA.",
+    "Do not add new tabs or change tab routes/labels beyond what is necessary to fix clipping and apply the left shift."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

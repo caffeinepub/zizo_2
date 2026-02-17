@@ -1,0 +1,49 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Bottom navigation: prevent clipping and apply slight left shift",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Prevent the far-right Profile tab (icon + label) from being clipped on all screen sizes while respecting safe-area insets and avoiding horizontal scroll.",
+      "acceptanceCriteria": [
+        "On Home/Trending/Create/Notifications/Profile routes, the Profile tab icon and label are fully visible (no clipping) at common viewport widths (mobile, tablet, desktop).",
+        "The bottom bar still respects safe-area insets (left/right/bottom) and remains fixed to the bottom without overlapping OS navigation areas.",
+        "No horizontal scrolling is introduced by the bottom tab bar."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/navigation/BottomTabs.tsx",
+          "operation": "modify",
+          "description": "Adjust bottom tab bar layout to avoid overflow on narrow widths by reducing per-tab horizontal padding, using equal-width/flexing tab buttons (e.g., flex-1/min-w-0), and ensuring the nav/container does not cause horizontal overflow (e.g., overflow-x hidden/clip on the bar). Keep existing safe-area handling (left/right/bottom) and fixed positioning."
+        },
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Extend existing bottom tab bar CSS variables to support robust spacing on small screens (e.g., introduce a dedicated variable for additional right-side breathing room / shift) without changing overall theme. Ensure changes are compatible with safe-area inset calculations already used by the bottom bar."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Shift all bottom navigation tabs slightly to the left as a group while keeping spacing balanced and touch targets unchanged.",
+      "acceptanceCriteria": [
+        "All five bottom tabs appear horizontally shifted left by a small, consistent amount (e.g., via asymmetric container padding/offset) without any single tab looking misaligned relative to the others.",
+        "After the shift, the Profile tab remains fully visible and is not closer than a reasonable touch-safe margin from the right edge/safe-area inset.",
+        "Tab hit areas remain comfortably tappable (no reduction in button size below current behavior)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/navigation/BottomTabs.tsx",
+          "operation": "modify",
+          "description": "Apply a small, consistent left shift to the entire tab group using asymmetric container padding (e.g., slightly larger right padding than left) or a subtle translate on the inner container, while preserving safe-area inset padding and maintaining current/comfortable hit-area sizes."
+        },
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Define/tune a single CSS variable controlling the bottom-tab group horizontal shift amount so it remains consistent across screen sizes and can be adjusted without changing component structure."
+        }
+      ]
+    }
+  ]
+}

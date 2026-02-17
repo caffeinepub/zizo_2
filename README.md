@@ -1,2 +1,3 @@
-# zizo_2
-Exported from Caffeine project: ZIZO
+## 
+
+To run app build and run docker image: `docker build -t app . docker run -it --network host app`
